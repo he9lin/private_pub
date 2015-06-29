@@ -3,6 +3,7 @@ function buildPrivatePub(doc) {
     connecting: false,
     fayeClient: null,
     fayeCallbacks: [],
+    extensions: [],
     subscriptions: {},
     subscriptionObjects: {},
     subscriptionCallbacks: {},
@@ -25,7 +26,12 @@ function buildPrivatePub(doc) {
 
     connectToFaye: function() {
       self.fayeClient = new Faye.Client(self.subscriptions.server);
-      self.fayeClient.addExtension(self.fayeExtension);
+
+      self.extensions.unshift(self.fayeExtension);
+      for (var i=0; i < self.extensions.length; i++) {
+        self.fayeClient.addExtension(self.extensions[i]);
+      };
+
       for (var i=0; i < self.fayeCallbacks.length; i++) {
         self.fayeCallbacks[i](self.fayeClient);
       };
